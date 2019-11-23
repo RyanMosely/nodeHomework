@@ -7,7 +7,7 @@ const fs = require("fs");
 //jonathan-major
 
 axios
-  .get("https://api.github.com/users/jonathan-major")
+  .get("https://api.github.com/users/RyanMosely")
   .then(function(res) {
 console.log(res);
    
