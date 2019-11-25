@@ -3,15 +3,71 @@
 
 const axios = require("axios");
 const fs = require("fs");
+const pdf = require('html-pdf');
+const inquirer = require("inquirer");
 
 //jonathan-major
+//JonPSmith
+
+pdf.create('index.html').toFile('./prof.pdf', function(err, res) {
+  if (err) return console.log(err);
+  //console.log(res); // { filename: '/app/businesscard.pdf' }
+});
+
+let arr = [];
+
+
+
+
+inquirer
+  .prompt(
+    {
+      type: "input",
+      message: "What is your favorite color?",
+      name: "color"
+    })
+    .then(function(response) {
+
+      console.log(response);
+
+      arr.push(`${JSON.stringify(response).replace(/[{}]/g, '')}`);
+
+
+      fs.writeFile("./gitText.json", `{${arr.join(", \n")}}`, function(err) {
+
+        if(err) {
+            return console.log(err);
+        }
+      
+        console.log("Color file was saved!");
+
+        
+      }); 
+    });
+
+axios
+  .get("https://api.github.com/users/ardalis/starred")
+  .then(function(res) {
+console.log(res.data.length);
+arr.push(`"stars": "${res.data.length}"`)
+
+fs.writeFile("./gitText.json", `{${arr.join(", \n")}}`, function(err) {
+
+  if(err) {
+      return console.log(err);
+  }
+
+  console.log("The file was saved!");
+}); 
+
+  })
 
 axios
   .get("https://api.github.com/users/RyanMosely")
   .then(function(res) {
-console.log(res);
+//console.log(res);
    
-    let arr = [];
+    
     
 
     arr.push(`"picture": "${res.data.avatar_url}"`);
@@ -22,7 +78,7 @@ console.log(res);
     arr.push(`"bio": "${res.data.bio}"`);
     arr.push(`"pubRepos": "${res.data.public_repos}"`);
     arr.push(`"followers": "${res.data.followers}"`);
-    arr.push(`"stars": "${res.data.location}"`);
+    //arr.push(`"stars": "${res.data.location}"`);
     arr.push(`"following": "${res.data.following}"`);
 
     console.log(`[${arr[1]}]`);
@@ -73,6 +129,8 @@ console.log(res);
       .then(function(data) {
         let jData = JSON.parse(data);
         console.log(jData.location);
+
+          
        
         
         
